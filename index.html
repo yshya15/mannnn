@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Album Buku</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #1a1a1a, #444); /* gradasi dasar */
+      
+      overflow: hidden;
+    }
+
+    .book {
+      width: 800px;
+      height: 500px;
+      perspective: 2000px;
+      position: relative;
+    }
+
+    .page {
+      width: 400px;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      right: 0;
+      transform-style: preserve-3d;
+      transform-origin: left;
+      transition: transform 1s ease;
+    }
+
+    .page .front,
+    .page .back {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      backface-visibility: hidden;
+      border: 1px solid 	#FAF0E6;
+      background: #FAF0E6;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    }
+
+    /* Cover depan */
+    .cover {
+      background: linear-gradient(135deg, #000, #222);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: rgb(234, 0, 255);
+      font-size: 28px;
+      font-family: 'Georgia', serif;
+      letter-spacing: 2px;
+      cursor: pointer;
+    }
+
+    /* Halaman kiri lirik */
+    .lyrics {
+  background: #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 39px;
+  font-family: 'Times New Roman', serif;
+  text-align: center;
+  animation: glow 2s infinite;
+}
+
+/* Animasi kelap kelip warna-warni */
+@keyframes glow {
+  0%   { color: red; }
+  20%  { color: orange; }
+  40%  { color: yellow; }
+  60%  { color: green; }
+  80%  { color: blue; }
+  100% { color: violet; }
+}
+
+
+    /* Halaman kanan foto */
+    .photo {
+      background: #000000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .photo img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    }
+
+    /* sisi balik */
+    .back {
+      transform: rotateY(180deg);
+    }
+
+    /* efek flip */
+    .flipped {
+      transform: rotateY(-180deg);
+    }
+    audio {
+    position: fixed;
+    bottom: 10px;      /* jarak dari bawah */
+    left: 50%;         /* biar di tengah */
+    transform: translateX(-50%);
+    z-index: 9999;
+    }
+
+     .snowflake {
+      position: absolute;
+      top: -10px;
+      color: white;
+      font-size: 1em;
+      user-select: none;
+      animation-name: fall;
+      animation-timing-function: linear;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="book" id="book">
+    <!-- Cover -->
+    <div class="page" id="cover">
+      <div class="front cover">Amanda Faikhul Khoiriyati</div>
+      <div class="back lyrics">cinta katakan cinta</div>
+    </div>
+
+    <!-- Halaman 1 -->
+    <div class="page" id="page1">
+      <div class="front photo">
+        <img src="a1.JPG" alt="Foto 1">
+      </div>
+      <div class="back lyrics">Hati ini meminta</div>
+    </div>
+
+    <!-- Halaman 2 -->
+    <div class="page" id="page2">
+      <div class="front photo">
+        <img src="a2.JPG" alt="Foto 2">
+      </div>
+      <div class="back lyrics">Kau lebih dari teman berbagi</div>
+    </div>
+
+    <div class="page" id="page3">
+      <div class="front photo">
+        <img src="a3.JPG" alt="Foto 3">
+      </div>
+      <div class="back lyrics">jadi kekasihku saja</div>
+    </div>
+
+    <div class="page" id="page3">
+      <div class="front photo">
+        <img src="a4.JPG" alt="Foto 3">
+      </div>
+      <div class="back lyrics">cinta katakan cinta</div>
+    </div>
+
+    <div class="page" id="page3">
+      <div class="front photo">
+        <img src="a5.JPG" alt="Foto 3">
+      </div>
+      <div class="back lyrics">hati ini meminta</div>
+    </div>
+
+    <div class="page" id="page2">
+      <div class="front photo">
+        <img src="a6.JPG" alt="Foto 2">
+      </div>
+      <div class="back lyrics">Kau lebih dari teman berbagi</div>
+    </div>
+
+    <div class="page" id="page2">
+      <div class="front photo">
+        <img src="a7.JPG" alt="Foto 2">
+      </div>
+      <div class="back lyrics">jadi kekasihku saja - keisya levronka</div>
+    </div>
+  </div>
+
+    <!-- Pemutar Lagu -->
+    <audio id="music" autoplay controls loop>
+        <source src="0.mp3" type="audio/mpeg">
+        Browser kamu tidak mendukung pemutar musik.
+    </audio>
+
+  <script>
+    const pages = document.querySelectorAll('.page');
+    let current = 0;
+
+    pages.forEach((page, index) => {
+      page.style.zIndex = pages.length - index;
+      page.addEventListener('click', () => {
+        if (index === current) {
+          page.classList.add('flipped');
+          page.style.zIndex = index;
+          current++;
+        } else if (index === current - 1) {
+          page.classList.remove('flipped');
+          page.style.zIndex = pages.length - index;
+          current--;
+        }
+      });
+    });
+
+     function createSnowflake() {
+      const snowflake = document.createElement('div');
+      snowflake.classList.add('snowflake');
+      snowflake.textContent = '❄';
+      snowflake.style.left = Math.random() * window.innerWidth + 'px';
+      snowflake.style.fontSize = (Math.random() * 10 + 10) + 'px';
+      snowflake.style.animationDuration = (Math.random() * 5 + 5) + 's';
+
+      document.body.appendChild(snowflake);
+
+      setTimeout(() => {
+        snowflake.remove();
+      }, 10000);
+    }
+
+    setInterval(createSnowflake, 200);
+  </script>
+</body>
+</html>
